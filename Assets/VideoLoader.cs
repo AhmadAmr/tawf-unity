@@ -32,7 +32,31 @@ public class VideoAutoLoader : MonoBehaviour
         videoPlayer.Prepare();
     }
 
-   
+    private void Awake()
+    {
+        GameObject video = GameObject.Find("video_plane");
+        videoPlayer = video.GetComponent<VideoPlayer>(); // Automatically get the VideoPlayer component
+        quadRenderer = video.GetComponent<Renderer>();
+        // Initially hide the quad by disabling its Renderer
+        if (quadRenderer != null)
+        {
+            quadRenderer.enabled = false;
+        }
+        else
+        {
+            Debug.LogError("Renderer component missing.");
+            return;
+        }
+
+        // Subscribe to the prepareCompleted event
+        videoPlayer.prepareCompleted += OnVideoPrepared;
+
+        // Start preparing the video
+        videoPlayer.Prepare();
+    }
+
+
+
 
     void OnVideoPrepared(VideoPlayer source)
     {
